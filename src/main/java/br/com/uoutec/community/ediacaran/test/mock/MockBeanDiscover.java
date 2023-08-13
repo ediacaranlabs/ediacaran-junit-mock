@@ -23,12 +23,23 @@ public class MockBeanDiscover {
 				BeanFactory bf = ()->{
 					try {
 						ClassLoader cl = Thread.currentThread().getContextClassLoader();
-						Class<?> mockFactory = cl.loadClass(MockBeanFactory.class.getName());
-						Class<?> type = cl.loadClass(p.getType().getName());
 						
-						Object factory = mockFactory.getConstructor().newInstance();
+						Class<?> testType    = cl.loadClass(clazz.getName());
+						Object testObject    = testType.getConstructor().newInstance();
+						Bean testBean        = new Bean(testObject);
+						Object propertyValue = testBean.get(p.getName());
+						
+						if(propertyValue != null) {
+							return propertyValue;
+						}
+						
+						Class<?> mockFactory = cl.loadClass(MockBeanFactory.class.getName());
+						Class<?> type        = cl.loadClass(p.getType().getName());
+						Object factory       = mockFactory.getConstructor().newInstance();
+						
 						mockFactory.getMethod("setType", Class.class).invoke(factory, type);
 						return mockFactory.getMethod("getInstance").invoke(factory);
+						
 					}
 					catch(Throwable ex) {
 						throw new EdiacaranBootstrapException(ex);
