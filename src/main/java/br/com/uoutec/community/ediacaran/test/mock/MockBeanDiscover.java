@@ -20,29 +20,39 @@ public class MockBeanDiscover {
 		
 		for(BeanPropertyAnnotation p: props) {
 			if(p.isAnnotationPresent(Mock.class)) {
-				BeanFactory bf = ()->{
-					try {
-						ClassLoader cl = Thread.currentThread().getContextClassLoader();
-						
-						Class<?> testType    = cl.loadClass(clazz.getName());
-						Object testObject    = testType.getConstructor().newInstance();
-						Bean testBean        = new Bean(testObject);
-						Object propertyValue = testBean.get(p.getName());
-						
-						if(propertyValue != null) {
-							return propertyValue;
+				BeanFactory bf = new BeanFactory() {
+					
+					@Override
+					public Object getInstance() {
+						try {
+							ClassLoader cl = Thread.currentThread().getContextClassLoader();
+							
+							Class<?> testType    = cl.loadClass(clazz.getName());
+							Object testObject    = testType.getConstructor().newInstance();
+							Bean testBean        = new Bean(testObject);
+							Object propertyValue = testBean.get(p.getName());
+							
+							if(propertyValue != null) {
+								return propertyValue;
+							}
+							
+							Class<?> mockFactory = cl.loadClass(MockBeanFactory.class.getName());
+							Class<?> type        = cl.loadClass(p.getType().getName());
+							Object factory       = mockFactory.getConstructor().newInstance();
+							
+							mockFactory.getMethod("setType", Class.class).invoke(factory, type);
+							return mockFactory.getMethod("getInstance").invoke(factory);
+							
 						}
-						
-						Class<?> mockFactory = cl.loadClass(MockBeanFactory.class.getName());
-						Class<?> type        = cl.loadClass(p.getType().getName());
-						Object factory       = mockFactory.getConstructor().newInstance();
-						
-						mockFactory.getMethod("setType", Class.class).invoke(factory, type);
-						return mockFactory.getMethod("getInstance").invoke(factory);
-						
+						catch(Throwable ex) {
+							throw new EdiacaranBootstrapException(ex);
+						}
 					}
-					catch(Throwable ex) {
-						throw new EdiacaranBootstrapException(ex);
+
+					@Override
+					public boolean acceptPluginContext(String value) {
+						Mock mock = p.getAnnotation(Mock.class);
+						return mock.value().isEmpty() || value.equals(mock.value());
 					}
 				};
 				

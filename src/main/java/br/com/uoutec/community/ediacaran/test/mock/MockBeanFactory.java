@@ -16,5 +16,10 @@ public class MockBeanFactory implements BeanFactory{
 	public Object getInstance() {
 		return Mockito.mock(type);
 	}
-	
+
+	@Override
+	public boolean acceptPluginContext(String value) {
+		return true;
+	}
+
 }
