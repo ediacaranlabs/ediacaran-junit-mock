@@ -11,7 +11,7 @@ import br.com.uoutec.community.ediacaran.EdiacaranBootstrapException;
 
 public class MockBeanDiscover {
 	
-	public Map<Class<?>, Object> getMocks(Class<?> clazz){
+	public Map<Class<?>, Object> getMocks(Class<?> clazz, String pluginContext){
 		
 		Map<Class<?>, Object> map = new HashMap<Class<?>, Object>();
 		
@@ -51,9 +51,18 @@ public class MockBeanDiscover {
 
 					@Override
 					public boolean acceptPluginContext(String value) {
+						
 						Mock mock = p.getAnnotation(Mock.class);
-						return mock.value().isEmpty() || value.equals(mock.value());
+						
+						if(mock != null) {
+							if(mock.value().isEmpty() || value.equals(mock.value())) {
+								return true;
+							}
+						}
+						
+						return pluginContext == null || value.equals(pluginContext);
 					}
+					
 				};
 				
 				map.put(p.getDeclaredType(), bf);
