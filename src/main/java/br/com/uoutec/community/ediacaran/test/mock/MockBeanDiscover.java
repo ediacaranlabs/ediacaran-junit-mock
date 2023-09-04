@@ -15,6 +15,8 @@ public class MockBeanDiscover {
 		
 		Map<Class<?>, Object> map = new HashMap<Class<?>, Object>();
 		
+		Object[] testObject = new Object[1];
+		
 		Bean bean = new Bean(clazz);
 		List<BeanPropertyAnnotation> props = bean.getProperties();
 		
@@ -27,9 +29,12 @@ public class MockBeanDiscover {
 						try {
 							ClassLoader cl = Thread.currentThread().getContextClassLoader();
 							
-							Class<?> testType    = cl.loadClass(clazz.getName());
-							Object testObject    = testType.getConstructor().newInstance();
-							Bean testBean        = new Bean(testObject);
+							if(testObject[0] == null) {
+								Class<?> testType = cl.loadClass(clazz.getName());
+								testObject[0]     = testType.getConstructor().newInstance();
+							}
+							
+							Bean testBean        = new Bean(testObject[0]);
 							Object propertyValue = testBean.get(p.getName());
 							
 							if(propertyValue != null) {
