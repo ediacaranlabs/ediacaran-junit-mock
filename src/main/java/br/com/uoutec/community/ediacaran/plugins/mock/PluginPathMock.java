@@ -1,9 +1,9 @@
 package br.com.uoutec.community.ediacaran.plugins.mock;
 
-import java.io.File;
-
-import br.com.uoutec.community.ediacaran.plugins.PluginPath;
 import javax.annotation.Generated;
+
+import br.com.uoutec.application.io.Path;
+import br.com.uoutec.community.ediacaran.plugins.PluginPath;
 
 public class PluginPathMock extends PluginPath{
 
@@ -12,7 +12,7 @@ public class PluginPathMock extends PluginPath{
 		super(builder.code, builder.supplier, builder.base, builder.config, builder.libPath, builder.classesPath);
 	}
 
-	public PluginPathMock(String code, String supplier, File base, File config, File libPath, File classesPath) {
+	public PluginPathMock(String code, String supplier, Path base, Path config, Path libPath, Path classesPath) {
 		super(code, supplier, base, config, libPath, classesPath);
 	}
 
@@ -25,10 +25,10 @@ public class PluginPathMock extends PluginPath{
 	public static final class Builder {
 		private String code;
 		private String supplier;
-		private File base;
-		private File config;
-		private File libPath;
-		private File classesPath;
+		private Path base;
+		private Path config;
+		private Path libPath;
+		private Path classesPath;
 
 		private Builder() {
 		}
@@ -43,22 +43,22 @@ public class PluginPathMock extends PluginPath{
 			return this;
 		}
 
-		public Builder withBase(File base) {
+		public Builder withBase(Path base) {
 			this.base = base;
 			return this;
 		}
 
-		public Builder withConfig(File config) {
+		public Builder withConfig(Path config) {
 			this.config = config;
 			return this;
 		}
 
-		public Builder withLibPath(File libPath) {
+		public Builder withLibPath(Path libPath) {
 			this.libPath = libPath;
 			return this;
 		}
 
-		public Builder withClassesPath(File classesPath) {
+		public Builder withClassesPath(Path classesPath) {
 			this.classesPath = classesPath;
 			return this;
 		}
