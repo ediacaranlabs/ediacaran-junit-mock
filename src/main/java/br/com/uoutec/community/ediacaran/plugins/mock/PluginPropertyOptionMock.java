@@ -1,7 +1,8 @@
 package br.com.uoutec.community.ediacaran.plugins.mock;
 
-import br.com.uoutec.community.ediacaran.plugins.PluginPropertyOption;
 import javax.annotation.Generated;
+
+import br.com.uoutec.ediacaran.core.plugins.PluginPropertyOption;
 
 public class PluginPropertyOptionMock extends PluginPropertyOption{
 

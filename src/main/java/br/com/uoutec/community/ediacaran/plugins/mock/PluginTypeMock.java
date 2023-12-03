@@ -1,8 +1,9 @@
 package br.com.uoutec.community.ediacaran.plugins.mock;
 
-import br.com.uoutec.community.ediacaran.plugins.PluginConfiguration;
-import br.com.uoutec.community.ediacaran.plugins.PluginType;
 import javax.annotation.Generated;
+
+import br.com.uoutec.ediacaran.core.plugins.PluginConfiguration;
+import br.com.uoutec.ediacaran.core.plugins.PluginType;
 
 public class PluginTypeMock implements PluginType{
 

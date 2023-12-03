@@ -5,9 +5,9 @@ import java.util.List;
 
 import javax.annotation.Generated;
 
-import br.com.uoutec.community.ediacaran.plugins.PluginProperty;
-import br.com.uoutec.community.ediacaran.plugins.PluginPropertyOption;
-import br.com.uoutec.community.ediacaran.plugins.PluginPropertyType;
+import br.com.uoutec.ediacaran.core.plugins.PluginProperty;
+import br.com.uoutec.ediacaran.core.plugins.PluginPropertyOption;
+import br.com.uoutec.ediacaran.core.plugins.PluginPropertyType;
 
 public class PluginPropertyMock extends PluginProperty{
 

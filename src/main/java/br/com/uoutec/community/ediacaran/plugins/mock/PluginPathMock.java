@@ -3,7 +3,7 @@ package br.com.uoutec.community.ediacaran.plugins.mock;
 import javax.annotation.Generated;
 
 import br.com.uoutec.application.io.Path;
-import br.com.uoutec.community.ediacaran.plugins.PluginPath;
+import br.com.uoutec.ediacaran.core.plugins.PluginPath;
 
 public class PluginPathMock extends PluginPath{
 

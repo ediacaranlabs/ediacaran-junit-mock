@@ -1,9 +1,10 @@
 package br.com.uoutec.community.ediacaran.plugins.mock;
 
-import br.com.uoutec.community.ediacaran.plugins.PluginDependency;
-import br.com.uoutec.community.ediacaran.plugins.PluginVersion;
-import br.com.uoutec.community.ediacaran.plugins.VersionComparator;
 import javax.annotation.Generated;
+
+import br.com.uoutec.ediacaran.core.plugins.PluginDependency;
+import br.com.uoutec.ediacaran.core.plugins.PluginVersion;
+import br.com.uoutec.ediacaran.core.plugins.VersionComparator;
 
 public class PluginDependencyMock extends PluginDependency{
 

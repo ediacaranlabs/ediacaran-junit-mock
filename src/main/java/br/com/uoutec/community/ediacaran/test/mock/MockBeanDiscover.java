@@ -6,8 +6,8 @@ import java.util.Map;
 
 import br.com.uoutec.application.bean.Bean;
 import br.com.uoutec.application.bean.BeanPropertyAnnotation;
-import br.com.uoutec.community.ediacaran.BeanFactory;
-import br.com.uoutec.community.ediacaran.EdiacaranBootstrapException;
+import br.com.uoutec.ediacaran.core.BeanFactory;
+import br.com.uoutec.ediacaran.core.EdiacaranBootstrapException;
 
 public class MockBeanDiscover {
 	

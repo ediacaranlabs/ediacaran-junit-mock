@@ -7,12 +7,12 @@ import java.util.Set;
 
 import javax.annotation.Generated;
 
-import br.com.uoutec.community.ediacaran.plugins.PluginConfigurationMetadata;
-import br.com.uoutec.community.ediacaran.plugins.PluginDependency;
-import br.com.uoutec.community.ediacaran.plugins.PluginPath;
-import br.com.uoutec.community.ediacaran.plugins.PluginProperty;
-import br.com.uoutec.community.ediacaran.plugins.PluginVersion;
-import br.com.uoutec.community.ediacaran.security.SecurityPermissionRequest;
+import br.com.uoutec.ediacaran.core.plugins.PluginConfigurationMetadata;
+import br.com.uoutec.ediacaran.core.plugins.PluginDependency;
+import br.com.uoutec.ediacaran.core.plugins.PluginPath;
+import br.com.uoutec.ediacaran.core.plugins.PluginProperty;
+import br.com.uoutec.ediacaran.core.plugins.PluginVersion;
+import br.com.uoutec.ediacaran.core.security.SecurityPermissionRequest;
 
 public class PluginConfigurationMetadataMock extends PluginConfigurationMetadata{
 

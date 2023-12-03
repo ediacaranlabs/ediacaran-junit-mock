@@ -2,7 +2,7 @@ package br.com.uoutec.community.ediacaran.test.mock;
 
 import org.mockito.Mockito;
 
-import br.com.uoutec.community.ediacaran.BeanFactory;
+import br.com.uoutec.ediacaran.core.BeanFactory;
 
 public class MockBeanFactory implements BeanFactory{
 

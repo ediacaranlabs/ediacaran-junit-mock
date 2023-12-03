@@ -2,8 +2,8 @@ package br.com.uoutec.community.ediacaran.plugins.mock;
 
 import javax.annotation.Generated;
 
-import br.com.uoutec.community.ediacaran.security.PermissionType;
-import br.com.uoutec.community.ediacaran.security.SecurityPermissionRequest;
+import br.com.uoutec.ediacaran.core.security.PermissionType;
+import br.com.uoutec.ediacaran.core.security.SecurityPermissionRequest;
 
 public class SecurityPermissionRequestMock extends SecurityPermissionRequest{
 

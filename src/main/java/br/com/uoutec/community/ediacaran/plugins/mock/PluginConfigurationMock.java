@@ -5,10 +5,10 @@ import java.util.Map;
 
 import javax.annotation.Generated;
 
-import br.com.uoutec.community.ediacaran.plugins.PluginConfigurationImp;
-import br.com.uoutec.community.ediacaran.plugins.PluginConfigurationMetadata;
-import br.com.uoutec.community.ediacaran.plugins.PluginProperty;
-import br.com.uoutec.community.ediacaran.plugins.PluginPropertyValue;
+import br.com.uoutec.ediacaran.core.plugins.PluginConfigurationImp;
+import br.com.uoutec.ediacaran.core.plugins.PluginConfigurationMetadata;
+import br.com.uoutec.ediacaran.core.plugins.PluginProperty;
+import br.com.uoutec.ediacaran.core.plugins.PluginPropertyValue;
 
 public class PluginConfigurationMock extends PluginConfigurationImp{
 

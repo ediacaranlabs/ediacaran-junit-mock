@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.annotation.Generated;
 
-import br.com.uoutec.community.ediacaran.VarParser;
-import br.com.uoutec.community.ediacaran.plugins.PluginPropertyValue;
+import br.com.uoutec.ediacaran.core.VarParser;
+import br.com.uoutec.ediacaran.core.plugins.PluginPropertyValue;
 
 public class PluginPropertyValueMock extends PluginPropertyValue{
 
