@@ -2,6 +2,7 @@ package br.com.uoutec.community.ediacaran.plugins.mock;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Generated;
 
@@ -45,6 +46,13 @@ public class PluginConfigurationMock extends PluginConfigurationImp{
 			return this;
 		}
 
+		public Builder withValues(Map<PluginProperty,PluginPropertyValue> values) {
+			for(Entry<PluginProperty,PluginPropertyValue> e: values.entrySet()) {
+				values.put(e.getKey(), e.getValue());
+			}
+			return this;
+		}
+		
 		public PluginConfigurationMock build() {
 			return new PluginConfigurationMock(this);
 		}

@@ -8,10 +8,10 @@ import javax.annotation.Generated;
 import br.com.uoutec.ediacaran.core.VarParser;
 import br.com.uoutec.ediacaran.core.plugins.PluginPropertyValue;
 
-public class PluginPropertyValueMock extends PluginPropertyValue{
+public class PluginPropertyValueBuilder extends PluginPropertyValue{
 
 	@Generated("SparkTools")
-	private PluginPropertyValueMock(Builder builder) {
+	private PluginPropertyValueBuilder(Builder builder) {
 		super(builder.varParser);
 		this.values = builder.values;
 	}
@@ -39,8 +39,15 @@ public class PluginPropertyValueMock extends PluginPropertyValue{
 			return this;
 		}
 
-		public PluginPropertyValueMock build() {
-			return new PluginPropertyValueMock(this);
+		public Builder withValues(String ... values) {
+			for(String value: values) {
+				this.values.add(value);
+			}
+			return this;
+		}
+		
+		public PluginPropertyValueBuilder build() {
+			return new PluginPropertyValueBuilder(this);
 		}
 	}
 
