@@ -141,7 +141,7 @@ public class PluginConfigurationBuilder {
 			return this;
 		}
 
-		public Builder withPluginProperty(String code,String supplier, boolean regex, PluginVersion version,
+		public Builder withPluginDependency(String code,String supplier, boolean regex, PluginVersion version,
 				VersionComparator comparator, boolean optional) {
 			
 			PluginDependency pluginDependency =
@@ -194,6 +194,7 @@ public class PluginConfigurationBuilder {
 						.withPluginInstaller(installer)
 						.withProperties(properties.keySet().stream().toArray(PluginProperty[]::new))
 						.withDependencies(dependencies.stream().toArray(PluginDependency[]::new))
+						.withSecurityPermissionRequest(securityPermissionRequests.stream().toArray(SecurityPermissionRequest[]::new))
 					.build();
 					
 			PluginConfiguration pluginConfiguration =

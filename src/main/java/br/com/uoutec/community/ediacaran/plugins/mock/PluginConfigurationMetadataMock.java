@@ -116,11 +116,13 @@ public class PluginConfigurationMetadataMock extends PluginConfigurationMetadata
 			return this;
 		}
 		
-		public Builder withSecurityPermissionRequest(SecurityPermissionRequest securityPermissionRequest) {
-			this.securityPermissionRequests.add(securityPermissionRequest);
+		public Builder withSecurityPermissionRequest(SecurityPermissionRequest ... securityPermissionRequest) {
+			for(SecurityPermissionRequest sc: securityPermissionRequest) {
+				this.securityPermissionRequests.add(sc);
+			}
 			return this;
 		}
-
+		
 		public PluginConfigurationMetadataMock build() {
 			return new PluginConfigurationMetadataMock(this);
 		}
