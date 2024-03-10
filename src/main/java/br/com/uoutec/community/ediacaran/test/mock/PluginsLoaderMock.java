@@ -12,61 +12,53 @@ import br.com.uoutec.ediacaran.core.VarParser;
 import br.com.uoutec.ediacaran.core.plugins.PluginConfiguration;
 import br.com.uoutec.ediacaran.core.plugins.PluginConfigurationFileReader;
 import br.com.uoutec.ediacaran.core.plugins.PluginParserException;
-import br.com.uoutec.ediacaran.core.plugins.PluginsLoader;
+import br.com.uoutec.ediacaran.core.plugins.PluginsLoaderImp;
 import br.com.uoutec.ediacaran.core.plugins.PluginsSearch;
 import br.com.uoutec.ediacaran.core.plugins.PluginsSearch.PluginsSearchFilter;
 
-public class PluginsLoaderMock implements PluginsLoader {
-
-	private PluginConfigurationFileReader pluginConfigurationFileReader;
+public class PluginsLoaderMock extends PluginsLoaderImp {
 
 	private Set<PluginConfiguration> pluginConfiguration;
-	
-	private Set<PluginsSearch> pluginsSearch;
 
+	private boolean loadAllPlugins;
+	
 	@Generated("SparkTools")
 	private PluginsLoaderMock(Builder builder) {
-		this.pluginConfigurationFileReader = builder.pluginConfigurationFileReader;
+		super(builder.pluginsSearch, builder.pluginConfigurationFileReader);
+		super.setPluginConfigurationFileReader(builder.pluginConfigurationFileReader);
 		this.pluginConfiguration = builder.pluginConfiguration;
-		this.pluginsSearch = builder.pluginsSearch;
-	}
-
-	@Override
-	public PluginConfigurationFileReader getPluginConfigurationFileReader() {
-		return pluginConfigurationFileReader;
-	}
-
-	@Override
-	public void setPluginConfigurationFileReader(PluginConfigurationFileReader pluginConfigurationFileReader) {
-		this.pluginConfigurationFileReader = pluginConfigurationFileReader;
-	}
-
-	@Override
-	public void add(PluginsSearch ps) {
-	}
-
-	@Override
-	public void remove(PluginsSearch ps) {
-	}
-
-	@Override
-	public void clear() {
-	}
-
-	@Override
-	public PluginsSearch[] getPluginsSearch() {
-		return pluginsSearch.stream().toArray(PluginsSearch[]::new);
+		this.loadAllPlugins = builder.loadAllPlugins;
 	}
 
 	@Override
 	public List<PluginConfiguration> loadPlugins(Path basePath, VarParser vars) throws PluginParserException {
-		return new ArrayList<>(pluginConfiguration);
+		Set<PluginConfiguration> p = new HashSet<>();
+		
+		if(loadAllPlugins) {
+			p.addAll(super.loadPlugins(basePath, vars));
+		}
+		
+		p.addAll(pluginConfiguration);
+		
+		return new ArrayList<>(p);
 	}
 
 	@Override
 	public List<PluginConfiguration> loadPlugins(Path basePath, VarParser vars, PluginsSearchFilter filter)
 			throws PluginParserException {
-		return new ArrayList<>(pluginConfiguration);
+		Set<PluginConfiguration> p = new HashSet<>();
+		
+		if(loadAllPlugins) {
+			p.addAll(super.loadPlugins(basePath, vars, filter));
+		}
+		
+		for(PluginConfiguration pc: pluginConfiguration) {
+			if(filter.accept(pc.getMetadata().getPath())) {
+				p.add(pc);
+			}
+		}
+		
+		return new ArrayList<>(p);
 	}
 	
 	@Generated("SparkTools")
@@ -77,9 +69,10 @@ public class PluginsLoaderMock implements PluginsLoader {
 	@Generated("SparkTools")
 	public static final class Builder {
 		private PluginConfigurationFileReader pluginConfigurationFileReader;
-		private Set<PluginConfiguration> pluginConfiguration;
-		private Set<PluginsSearch> pluginsSearch;
-
+		private Set<PluginConfiguration> pluginConfiguration = new HashSet<>();
+		private Set<PluginsSearch> pluginsSearch = new HashSet<>();
+		private boolean loadAllPlugins;
+		
 		private Builder() {
 		}
 
@@ -103,6 +96,11 @@ public class PluginsLoaderMock implements PluginsLoader {
 			}
 			
 			this.pluginsSearch.add(pluginsSearch);
+			return this;
+		}
+
+		public Builder withLoadAllPlugins(boolean loadAllPlugins) {
+			this.loadAllPlugins = loadAllPlugins;
 			return this;
 		}
 

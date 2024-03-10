@@ -109,6 +109,13 @@ public class PluginConfigurationMetadataMock extends PluginConfigurationMetadata
 			return this;
 		}
 
+		public Builder withDependencies(PluginDependency ... dependency) {
+			for(PluginDependency d: dependency) {
+				this.dependencies.add(d);
+			}
+			return this;
+		}
+		
 		public Builder withSecurityPermissionRequest(SecurityPermissionRequest securityPermissionRequest) {
 			this.securityPermissionRequests.add(securityPermissionRequest);
 			return this;

@@ -1,17 +1,24 @@
 package br.com.uoutec.community.ediacaran.plugins.mock;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Generated;
 
 import br.com.uoutec.application.io.Path;
 import br.com.uoutec.ediacaran.core.plugins.PluginConfiguration;
 import br.com.uoutec.ediacaran.core.plugins.PluginConfigurationMetadata;
+import br.com.uoutec.ediacaran.core.plugins.PluginDependency;
 import br.com.uoutec.ediacaran.core.plugins.PluginPath;
 import br.com.uoutec.ediacaran.core.plugins.PluginProperty;
 import br.com.uoutec.ediacaran.core.plugins.PluginPropertyType;
 import br.com.uoutec.ediacaran.core.plugins.PluginPropertyValue;
+import br.com.uoutec.ediacaran.core.plugins.PluginVersion;
+import br.com.uoutec.ediacaran.core.plugins.VersionComparator;
+import br.com.uoutec.ediacaran.core.security.PermissionType;
+import br.com.uoutec.ediacaran.core.security.SecurityPermissionRequest;
 
 @SuppressWarnings("unused")
 public class PluginConfigurationBuilder {
@@ -33,6 +40,10 @@ public class PluginConfigurationBuilder {
 	private Path classesPath;
 
 	private Map<PluginProperty, PluginPropertyValue> properties = new HashMap<>();
+	
+	private Set<PluginDependency> dependencies = new HashSet<>();
+	
+	private Set<SecurityPermissionRequest> securityPermissionRequests = new HashSet<>();
 	
 	@Generated("SparkTools")
 	private PluginConfigurationBuilder(Builder builder) {
@@ -62,6 +73,8 @@ public class PluginConfigurationBuilder {
 		private Path libPath;
 		private Path classesPath;
 		private Map<PluginProperty, PluginPropertyValue> properties = new HashMap<>();
+		private Set<PluginDependency> dependencies = new HashSet<>();
+		private Set<SecurityPermissionRequest> securityPermissionRequests = new HashSet<>();
 
 		private Builder() {
 		}
@@ -122,6 +135,46 @@ public class PluginConfigurationBuilder {
 			this.properties.put(pluginProperty, PluginPropertyValueBuilder.builder().withValues(values).build());
 			return this;
 		}
+
+		public Builder withPluginDependency(PluginDependency pluginDependency) {
+			this.dependencies.add(pluginDependency);
+			return this;
+		}
+
+		public Builder withPluginProperty(String code,String supplier, boolean regex, PluginVersion version,
+				VersionComparator comparator, boolean optional) {
+			
+			PluginDependency pluginDependency =
+					PluginDependencyMock.builder()
+						.withCode(code)
+						.withComparator(comparator)
+						.withOptional(optional)
+						.withRegex(regex)
+						.withSupplier(supplier)
+						.withVersion(version)
+					.build();
+			
+			this.dependencies.add(pluginDependency);
+			return this;
+		}
+
+		public Builder withSecurityPermission(SecurityPermissionRequest securityPermissionRequest) {
+			this.securityPermissionRequests.add(securityPermissionRequest);
+			return this;
+		}
+
+		public Builder withSecurityPermission(String name, PermissionType permission, String actions) {
+			
+			SecurityPermissionRequest securityPermissionRequest =
+					SecurityPermissionRequestMock.builder()
+						.withActions(actions)
+						.withName(name)
+						.withPermission(permission)
+					.build();
+			
+			this.securityPermissionRequests.add(securityPermissionRequest);
+			return this;
+		}
 		
 		public PluginConfiguration build() {
 			
@@ -140,6 +193,7 @@ public class PluginConfigurationBuilder {
 						.withName(name)
 						.withPluginInstaller(installer)
 						.withProperties(properties.keySet().stream().toArray(PluginProperty[]::new))
+						.withDependencies(dependencies.stream().toArray(PluginDependency[]::new))
 					.build();
 					
 			PluginConfiguration pluginConfiguration =
