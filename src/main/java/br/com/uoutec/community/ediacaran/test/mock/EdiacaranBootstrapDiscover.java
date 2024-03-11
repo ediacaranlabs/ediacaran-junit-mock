@@ -9,6 +9,8 @@ public class EdiacaranBootstrapDiscover {
 
 	public EdiacaranBootstrap getEdiacaranBootstrap(Class<?> clazz){
 		try {
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			clazz = classLoader.loadClass(clazz.getName());
 			Object o = clazz.getConstructor().newInstance();
 			Bean bean = new Bean(o, clazz);
 			return (EdiacaranBootstrap) bean.get("ediacaranBootstrap");
