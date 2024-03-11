@@ -7,7 +7,6 @@ import java.util.Map;
 import br.com.uoutec.application.bean.Bean;
 import br.com.uoutec.application.bean.BeanPropertyAnnotation;
 import br.com.uoutec.ediacaran.core.BeanFactory;
-import br.com.uoutec.ediacaran.core.EdiacaranBootstrapException;
 
 public class MockBeanDiscover {
 	
@@ -15,63 +14,28 @@ public class MockBeanDiscover {
 		
 		Map<Class<?>, Object> map = new HashMap<Class<?>, Object>();
 		
-		Object[] testObject = new Object[1];
-		
 		Bean bean = new Bean(clazz);
+		
 		List<BeanPropertyAnnotation> props = bean.getProperties();
+		Map<String, Map<Object,Object>> cache = new HashMap<>();
 		
 		for(BeanPropertyAnnotation p: props) {
+			
 			if(p.isAnnotationPresent(Mock.class)) {
-				BeanFactory bf = new BeanFactory() {
-					
-					@Override
-					public Object getInstance() {
-						try {
-							ClassLoader cl = Thread.currentThread().getContextClassLoader();
-							
-							if(testObject[0] == null) {
-								Class<?> testType = cl.loadClass(clazz.getName());
-								testObject[0]     = testType.getConstructor().newInstance();
-							}
-							
-							Bean testBean        = new Bean(testObject[0]);
-							Object propertyValue = testBean.get(p.getName());
-							
-							if(propertyValue != null) {
-								return propertyValue;
-							}
-							
-							Class<?> mockFactory = cl.loadClass(MockBeanFactory.class.getName());
-							Class<?> type        = cl.loadClass(p.getType().getName());
-							Object factory       = mockFactory.getConstructor().newInstance();
-							
-							mockFactory.getMethod("setType", Class.class).invoke(factory, type);
-							return mockFactory.getMethod("getInstance").invoke(factory);
-							
-						}
-						catch(Throwable ex) {
-							throw new EdiacaranBootstrapException(ex);
-						}
-					}
-
-					@Override
-					public boolean acceptPluginContext(String value) {
-						
-						Mock mock = p.getAnnotation(Mock.class);
-						
-						if(mock != null) {
-							if(mock.value().isEmpty() || value.equals(mock.value())) {
-								return true;
-							}
-						}
-						
-						return pluginContext == null || value.equals(pluginContext);
-					}
-					
-				};
+				Mock mock = p.getAnnotation(Mock.class);
+				String context = mock.value().trim();
 				
-				map.put(p.getDeclaredType(), bf);
+				Map<Object,Object> c = cache.get(context);
+				
+				if(c == null) {
+					c = new HashMap<>();
+					cache.put(context, c);
+				}
+				
+				BeanFactory factory = new MockBeanFactory(clazz, p.getName(), context, c);
+				map.put(p.getDeclaredType(), factory);
 			}
+			
 		}
 		
 		return map;
