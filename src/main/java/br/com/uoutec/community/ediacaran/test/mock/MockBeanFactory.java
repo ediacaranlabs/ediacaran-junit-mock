@@ -44,22 +44,7 @@ public class MockBeanFactory implements BeanFactory{
 	}
 
 	private Object getInstance(Class<?> type) throws Exception {
-		
-		if(cache.containsKey(getID("@"))) {
-			return cache.get(getID("@@"));
-		}
-		
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		
-		Class<?> contextType = cl.loadClass(type.getName());
-		Object obj = contextType.getConstructor().newInstance();
-		
-		Bean bean = new Bean(obj, contextType);
-		
-		cache.put(getID("@"), bean);
-		cache.put(getID("@@"), obj);
-		
-		return obj;
+		return getObject();
 	}
 	
 	private Object getInstance(String name) throws Exception {
@@ -68,8 +53,8 @@ public class MockBeanFactory implements BeanFactory{
 			return cache.get(getID(name));
 		}
 		
-		Bean bean = (Bean)cache.get(getID("@"));
-		Object obj = bean.get(getID(name));
+		Bean bean  = (Bean)getBean();
+		Object obj = bean.get(name);
 		
 		if(obj == null) {
 			obj = Mockito.mock(bean.getProperty(name).getType());
@@ -78,6 +63,35 @@ public class MockBeanFactory implements BeanFactory{
 		cache.put(getID(name), bean);
 		
 		return obj;
+	}
+	
+	private Bean getBean() throws Exception {
+		
+		if(cache.containsKey(getID("@"))) {
+			return (Bean) cache.get(getID("@"));
+		}
+		
+		Object obj = getObject();
+		Bean bean = new Bean(obj);
+		cache.put(getID("@"), bean);
+		
+		return bean;
+	}
+	
+	private Object getObject() throws Exception {
+		
+		if(cache.containsKey(getID("@@"))) {
+			return cache.get(getID("@@"));
+		}
+		
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		
+		Class<?> contextType = cl.loadClass(type.getName());
+		Object obj = contextType.getConstructor().newInstance();
+		
+		cache.put(getID("@@"), obj);
+		
+		return obj; 
 	}
 	
 	private String getID(String name) {
