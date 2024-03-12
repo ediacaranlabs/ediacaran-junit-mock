@@ -1,8 +1,11 @@
 package br.com.uoutec.community.ediacaran.test.mock;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.annotation.Generated;
@@ -18,6 +21,8 @@ import br.com.uoutec.ediacaran.core.plugins.PluginsSearch.PluginsSearchFilter;
 
 public class PluginsLoaderMock extends PluginsLoaderImp {
 
+	private Map<String, Map<String,String>> properties = new HashMap<>();
+	
 	private Set<PluginConfiguration> pluginConfiguration;
 
 	private boolean loadAllPlugins;
@@ -28,6 +33,7 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 		super.setPluginConfigurationFileReader(builder.pluginConfigurationFileReader);
 		this.pluginConfiguration = builder.pluginConfiguration;
 		this.loadAllPlugins = builder.loadAllPlugins;
+		this.properties = builder.properties;
 	}
 
 	@Override
@@ -39,6 +45,8 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 		}
 		
 		p.addAll(pluginConfiguration);
+		
+		overrideProperties(p);
 		
 		return new ArrayList<>(p);
 	}
@@ -58,7 +66,23 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 			}
 		}
 		
+		overrideProperties(p);
+		
 		return new ArrayList<>(p);
+	}
+	
+	private void overrideProperties(Set<PluginConfiguration> set) {
+		for(PluginConfiguration pc: set) {
+			Map<String,String> props = properties.get(pc.getMetadata().getCode());
+			
+			if(props != null) {
+				for(Entry<String,String> prop: props.entrySet()) {
+					if(prop.getValue() != null) {
+						pc.setValue(prop.getKey(), prop.getValue());
+					}
+				}
+			}
+		}
 	}
 	
 	@Generated("SparkTools")
@@ -72,6 +96,7 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 		private Set<PluginConfiguration> pluginConfiguration = new HashSet<>();
 		private Set<PluginsSearch> pluginsSearch = new HashSet<>();
 		private boolean loadAllPlugins;
+		private Map<String, Map<String,String>> properties = new HashMap<>();
 		
 		private Builder() {
 		}
@@ -104,6 +129,23 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 			return this;
 		}
 
+		public Builder withProperty(String code, String property, String value) {
+			
+			Map<String,String> props = properties.get(code);
+			
+			if(props == null) {
+				props = new HashMap<>();
+				properties.put(code, props);
+			}
+			
+			if(property == null) {
+				throw new NullPointerException("property");
+			}
+			
+			props.put(property, value);
+			
+			return this;
+		}
 		public PluginsLoaderMock build() {
 			return new PluginsLoaderMock(this);
 		}
