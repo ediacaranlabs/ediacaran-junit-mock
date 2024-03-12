@@ -1,6 +1,7 @@
 package br.com.uoutec.community.ediacaran.test.mock;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import br.com.uoutec.application.security.SecurityPermission;
@@ -23,17 +24,24 @@ public class SecurityPolicyManagerMock
 	}
 	
 	public Set<SecurityPermissionStatus> loadPermissions(PluginConfiguration pluginConfiguration) {
-		if(!pluginConfiguration.getMetadata().getCode().equals(pluginContext))
+		
+		if(!pluginConfiguration.getMetadata().getCode().equals(pluginContext)) {
 			return super.loadPermissions(pluginConfiguration);
-		
-		Set<SecurityPermissionStatus> sps = new HashSet<>();
-		
-		SecurityPermissionsDiscover spd = new SecurityPermissionsDiscover();
-		for(SecurityPermission sp: spd.getSecurityPermissions(testClass)) {
-			sps.add(toSecurityPermissionStatus(sp));
 		}
 		
-		return sps;
+		
+		SecurityPermissionsDiscover spd = new SecurityPermissionsDiscover();
+		Optional<Set<SecurityPermission>> per = spd.getSecurityPermissions(testClass);
+		
+		if(per.isPresent()) {
+			Set<SecurityPermissionStatus> sps = new HashSet<>();
+			for(SecurityPermission sp: per.get()) {
+				sps.add(toSecurityPermissionStatus(sp));
+			}
+			return sps;
+		}
+		
+		return super.loadPermissions(pluginConfiguration);
 	}
 	
 	private SecurityPermissionStatus toSecurityPermissionStatus(SecurityPermission value) {
