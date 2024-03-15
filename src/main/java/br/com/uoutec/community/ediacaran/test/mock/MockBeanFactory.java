@@ -5,6 +5,7 @@ import java.util.Map;
 import org.mockito.Mockito;
 
 import br.com.uoutec.application.bean.Bean;
+import br.com.uoutec.application.security.ContextSystemSecurityCheck;
 import br.com.uoutec.ediacaran.core.BeanFactory;
 
 public class MockBeanFactory implements BeanFactory{
@@ -84,7 +85,7 @@ public class MockBeanFactory implements BeanFactory{
 			return cache.get(getID("@@"));
 		}
 		
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		ClassLoader cl = ContextSystemSecurityCheck.doPrivileged(()->Thread.currentThread().getContextClassLoader());
 		
 		Class<?> contextType = cl.loadClass(type.getName());
 		Object obj = contextType.getConstructor().newInstance();
