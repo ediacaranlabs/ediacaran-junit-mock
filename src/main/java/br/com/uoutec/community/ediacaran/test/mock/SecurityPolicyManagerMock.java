@@ -1,8 +1,11 @@
 package br.com.uoutec.community.ediacaran.test.mock;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.Generated;
 
 import br.com.uoutec.application.security.SecurityPermission;
 import br.com.uoutec.ediacaran.core.SecurityPolicyManagerImp;
@@ -14,34 +17,34 @@ import br.com.uoutec.ediacaran.core.security.SecurityPermissionStatus;
 public class SecurityPolicyManagerMock 
 	extends SecurityPolicyManagerImp {
 
-	private String pluginContext;
+	private Map<String, Set<SecurityPermission>> permissions;
+
+	private boolean loadAllPermissions;
 	
-	private Class<?> testClass;
-	
-	public SecurityPolicyManagerMock(String pluginContext, Class<?> testClass) {
-		this.pluginContext = pluginContext;
-		this.testClass = testClass;
+	@Generated("SparkTools")
+	private SecurityPolicyManagerMock(Builder builder) {
+		this.permissions = builder.permissions;
+		this.loadAllPermissions = builder.loadAllPermissions;
 	}
 	
 	public Set<SecurityPermissionStatus> loadPermissions(PluginConfiguration pluginConfiguration) {
 		
-		if(!pluginConfiguration.getMetadata().getCode().equals(pluginContext)) {
-			return super.loadPermissions(pluginConfiguration);
+		Set<SecurityPermissionStatus> result = new HashSet<>();
+		
+		if(loadAllPermissions) {
+			result.addAll(super.loadPermissions(pluginConfiguration));
 		}
 		
+		Set<SecurityPermission> override = 
+				permissions.get(pluginConfiguration.getMetadata().getCode());
 		
-		SecurityPermissionsDiscover spd = new SecurityPermissionsDiscover();
-		Optional<Set<SecurityPermission>> per = spd.getSecurityPermissions(testClass);
-		
-		if(per.isPresent()) {
-			Set<SecurityPermissionStatus> sps = new HashSet<>();
-			for(SecurityPermission sp: per.get()) {
-				sps.add(toSecurityPermissionStatus(sp));
+		if(override != null) {
+			for(SecurityPermission sp: override) {
+				result.add(toSecurityPermissionStatus(sp));
 			}
-			return sps;
 		}
 		
-		return super.loadPermissions(pluginConfiguration);
+		return result;
 	}
 	
 	private SecurityPermissionStatus toSecurityPermissionStatus(SecurityPermission value) {
@@ -54,6 +57,41 @@ public class SecurityPolicyManagerMock
 		}
 		
 		throw new PluginException(String.valueOf(value));
+	}
+	
+	@Generated("SparkTools")
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	@Generated("SparkTools")
+	public static final class Builder {
+		private Map<String, Set<SecurityPermission>> permissions = new HashMap<String, Set<SecurityPermission>>();
+		private boolean loadAllPermissions;
+		
+		private Builder() {
+		}
+
+		public Builder withLoadAllPermissions(boolean value) {
+			this.loadAllPermissions = value;
+			return this;
+		}
+		
+		public Builder withPermission(String context, SecurityPermission permission) {
+			Set<SecurityPermission> set = permissions.get(context);
+			
+			if(set == null) {
+				set = new HashSet<>();
+				permissions.put(context, set);
+			}
+			
+			set.add(permission);
+			return this;
+		}
+
+		public SecurityPolicyManagerMock build() {
+			return new SecurityPolicyManagerMock(this);
+		}
 	}
 	
 }
