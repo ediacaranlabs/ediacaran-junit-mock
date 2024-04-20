@@ -50,18 +50,21 @@ public class MockBeanFactory implements BeanFactory{
 	
 	private Object getInstance(String name) throws Exception {
 	
+		Bean bean;
+		
 		if(cache.containsKey(getID(name))) {
-			return cache.get(getID(name));
+			bean = (Bean)cache.get(getID(name));
+		}
+		else {
+			bean  = (Bean)getBean();
+			cache.put(getID(name), bean);
 		}
 		
-		Bean bean  = (Bean)getBean();
 		Object obj = bean.get(name);
 		
 		if(obj == null) {
 			obj = Mockito.mock(bean.getProperty(name).getType());
 		}
-		
-		cache.put(getID(name), bean);
 		
 		return obj;
 	}
