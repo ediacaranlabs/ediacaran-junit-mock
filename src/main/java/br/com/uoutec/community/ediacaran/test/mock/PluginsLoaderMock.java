@@ -12,6 +12,7 @@ import javax.annotation.Generated;
 
 import br.com.uoutec.application.io.Path;
 import br.com.uoutec.ediacaran.core.VarParser;
+import br.com.uoutec.ediacaran.core.plugins.MutablePluginConfiguration;
 import br.com.uoutec.ediacaran.core.plugins.PluginConfiguration;
 import br.com.uoutec.ediacaran.core.plugins.PluginConfigurationFileReader;
 import br.com.uoutec.ediacaran.core.plugins.PluginParserException;
@@ -81,6 +82,7 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 						pc.setValue(prop.getKey(), prop.getValue());
 					}
 				}
+				((MutablePluginConfiguration)pc).updateValues();
 			}
 		}
 	}
