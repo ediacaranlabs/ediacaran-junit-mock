@@ -8,19 +8,22 @@ import javax.annotation.Generated;
 import br.com.uoutec.ediacaran.core.plugins.PluginProperty;
 import br.com.uoutec.ediacaran.core.plugins.PluginPropertyOption;
 import br.com.uoutec.ediacaran.core.plugins.PluginPropertyType;
+import br.com.uoutec.ediacaran.core.plugins.StaticPluginOptionsResolver;
 
 public class PluginPropertyMock extends PluginProperty{
 
 	@Generated("SparkTools")
 	private PluginPropertyMock(Builder builder) {
-		super(builder.code, builder.description, builder.comment, builder.name, builder.type, builder.options,
-				builder.allowEmpty, builder.min, builder.max, builder.regex, builder.order, builder.protectedValue);
+		super(builder.code, builder.description, builder.comment, builder.name, builder.type, 
+				builder.optionsClass, new StaticPluginOptionsResolver(builder.options), builder.allowEmpty, builder.min, 
+				builder.max, builder.regex, builder.order, builder.protectedValue);
 	}
 
 	public PluginPropertyMock(String code, String description, String comment, String name, PluginPropertyType type,
-			List<PluginPropertyOption> options, boolean empty, short min, short max, String regex, short order,
+			String optionsClass, List<PluginPropertyOption> options, boolean empty, short min, short max, String regex, short order,
 			boolean protectedValue) {
-		super(code, description, comment, name, type, options, empty, min, max, regex, order, protectedValue);
+		super(code, description, comment, name, type, optionsClass, new StaticPluginOptionsResolver(options), 
+				empty, min, max, regex, order, protectedValue);
 	}
 
 	@Generated("SparkTools")
@@ -36,6 +39,7 @@ public class PluginPropertyMock extends PluginProperty{
 		private String name;
 		private PluginPropertyType type;
 		private List<PluginPropertyOption> options = new ArrayList<>();
+		private String optionsClass;
 		private short min;
 		private short max;
 		private String regex;
@@ -56,6 +60,10 @@ public class PluginPropertyMock extends PluginProperty{
 			return this;
 		}
 
+		public Builder withOptionsClass(String optionsClass) {
+			this.optionsClass = optionsClass;
+			return this;
+		}
 		public Builder withComment(String comment) {
 			this.comment = comment;
 			return this;
