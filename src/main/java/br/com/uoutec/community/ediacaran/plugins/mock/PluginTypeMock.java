@@ -15,9 +15,9 @@ public class PluginTypeMock implements PluginType{
 
 	private Package[] parentPackages;
 
-	private ClassLoader classLoader;
+	//private ClassLoader classLoader;
 
-	private ClassLoader[] parentClassLoader;
+	//private ClassLoader[] parentClassLoader;
 
 	private PluginConfiguration configuration;
 
@@ -27,8 +27,8 @@ public class PluginTypeMock implements PluginType{
 		this.packageName = builder.packageName;
 		this.packagesName = builder.packagesName;
 		this.parentPackages = builder.parentPackages;
-		this.classLoader = builder.classLoader;
-		this.parentClassLoader = builder.parentClassLoader;
+		//this.classLoader = builder.classLoader;
+		//this.parentClassLoader = builder.parentClassLoader;
 		this.configuration = builder.configuration;
 	}
 
@@ -43,8 +43,8 @@ public class PluginTypeMock implements PluginType{
 		private Package packageName;
 		private Package[] packagesName;
 		private Package[] parentPackages;
-		private ClassLoader classLoader;
-		private ClassLoader[] parentClassLoader;
+		//private ClassLoader classLoader;
+		//private ClassLoader[] parentClassLoader;
 		private PluginConfiguration configuration;
 
 		private Builder() {
@@ -70,16 +70,19 @@ public class PluginTypeMock implements PluginType{
 			return this;
 		}
 
+		/*
 		public Builder withClassLoader(ClassLoader classLoader) {
 			this.classLoader = classLoader;
 			return this;
 		}
-
+		 */
+		/*
 		public Builder withParentClassLoader(ClassLoader[] parentClassLoader) {
 			this.parentClassLoader = parentClassLoader;
 			return this;
 		}
-
+		 */
+		
 		public Builder withConfiguration(PluginConfiguration configuration) {
 			this.configuration = configuration;
 			return this;
@@ -110,16 +113,20 @@ public class PluginTypeMock implements PluginType{
 		return parentPackages;
 	}
 
+	/*
 	@Override
 	public ClassLoader getClassLoader() {
 		return classLoader;
 	}
-
+    */
+	
+	/*
 	@Override
 	public ClassLoader[] getParentClassLoader() {
 		return parentClassLoader;
 	}
-
+	 */
+	
 	@Override
 	public PluginConfiguration getConfiguration() {
 		return configuration;
