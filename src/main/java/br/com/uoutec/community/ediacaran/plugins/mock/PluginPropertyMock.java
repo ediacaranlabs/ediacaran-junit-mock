@@ -16,14 +16,14 @@ public class PluginPropertyMock extends PluginProperty{
 	private PluginPropertyMock(Builder builder) {
 		super(builder.code, builder.description, builder.comment, builder.name, builder.type, 
 				builder.optionsClass, new StaticPluginOptionsResolver(builder.options), builder.allowEmpty, builder.min, 
-				builder.max, builder.regex, builder.order, builder.protectedValue);
+				builder.rows, builder.max, builder.regex, builder.order, builder.protectedValue);
 	}
 
 	public PluginPropertyMock(String code, String description, String comment, String name, PluginPropertyType type,
-			String optionsClass, List<PluginPropertyOption> options, boolean empty, short min, short max, String regex, short order,
+			String optionsClass, List<PluginPropertyOption> options, boolean empty, short rows, short min, short max, String regex, short order,
 			boolean protectedValue) {
 		super(code, description, comment, name, type, optionsClass, new StaticPluginOptionsResolver(options), 
-				empty, min, max, regex, order, protectedValue);
+				empty, rows, min, max, regex, order, protectedValue);
 	}
 
 	@Generated("SparkTools")
@@ -40,6 +40,7 @@ public class PluginPropertyMock extends PluginProperty{
 		private PluginPropertyType type;
 		private List<PluginPropertyOption> options = new ArrayList<>();
 		private String optionsClass;
+		private short rows;
 		private short min;
 		private short max;
 		private String regex;
@@ -84,6 +85,11 @@ public class PluginPropertyMock extends PluginProperty{
 			return this;
 		}
 
+		public Builder withRows(short rows) {
+			this.rows = rows;
+			return this;
+		}
+		
 		public Builder withMin(short min) {
 			this.min = min;
 			return this;
