@@ -15,6 +15,8 @@ import br.com.uoutec.ediacaran.core.VarParser;
 import br.com.uoutec.ediacaran.core.plugins.MutablePluginConfiguration;
 import br.com.uoutec.ediacaran.core.plugins.PluginConfiguration;
 import br.com.uoutec.ediacaran.core.plugins.PluginConfigurationFileReader;
+import br.com.uoutec.ediacaran.core.plugins.PluginConfigurationMetadata;
+import br.com.uoutec.ediacaran.core.plugins.PluginDependency;
 import br.com.uoutec.ediacaran.core.plugins.PluginParserException;
 import br.com.uoutec.ediacaran.core.plugins.PluginsLoaderImp;
 import br.com.uoutec.ediacaran.core.plugins.PluginsSearch;
@@ -26,6 +28,10 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 	
 	private Set<PluginConfiguration> pluginConfiguration;
 
+	private Map<String, Set<PluginDependency>> addDependencies;
+	
+	private Map<String, Set<PluginDependency>> removeDependencies;
+	
 	private boolean loadAllPlugins;
 	
 	@Generated("SparkTools")
@@ -35,6 +41,8 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 		this.pluginConfiguration = builder.pluginConfiguration;
 		this.loadAllPlugins = builder.loadAllPlugins;
 		this.properties = builder.properties;
+		this.addDependencies = builder.addDependencies;
+		this.removeDependencies = builder.removeDependencies;
 	}
 
 	@Override
@@ -68,8 +76,62 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 		}
 		
 		overrideProperties(p);
+		overrideMetadata(p);
 		
 		return new ArrayList<>(p);
+	}
+
+	private void overrideMetadata(Set<PluginConfiguration> set) {
+		
+		Set<PluginConfiguration> changed = new HashSet<>();
+		Set<PluginConfiguration> removed = new HashSet<>();
+		
+		for(PluginConfiguration pc: set) {
+			Set<PluginDependency> pd = pc.getMetadata().getDependencies();
+			Set<PluginDependency> mpd = new HashSet<>(pd);
+			
+			Set<PluginDependency> add = addDependencies.get(pc.getMetadata().getCode());
+			Set<PluginDependency> remove = removeDependencies.get(pc.getMetadata().getCode());
+			
+			if(add != null) {
+				add.stream().forEach((e)->mpd.add(e));
+			}
+
+			if(remove != null) {
+				remove.stream().forEach((e)->mpd.remove(e));
+			}
+			
+			if(remove != null || add != null) {
+				PluginConfiguration newPC = 
+						new PluginConfigurationWrapper(
+								pc, 
+								new PluginConfigurationMetadata(
+										pc.getMetadata().getSupplier(), 
+										pc.getMetadata().getCode(), 
+										pc.getMetadata().getName(), 
+										pc.getMetadata().getGroup(),
+										pc.getMetadata().getSubgroup(), 
+										pc.getMetadata().getVersion(), 
+										pc.getMetadata().getPath(),
+										pc.getMetadata().getPluginInstaller(), 
+										pc.getMetadata().getProperties(),
+										mpd,
+										pc.getMetadata().getSecurityPermissionRequests()
+								)
+						);
+				changed.add(newPC);
+				removed.add(pc);
+			}
+		}
+
+		for(PluginConfiguration pc: removed) {
+			set.remove(pc);
+		}
+		
+		for(PluginConfiguration pc: changed) {
+			set.add(pc);
+		}
+		
 	}
 	
 	private void overrideProperties(Set<PluginConfiguration> set) {
@@ -94,6 +156,9 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 
 	@Generated("SparkTools")
 	public static final class Builder {
+		
+		private Map<String, Set<PluginDependency>> addDependencies = new HashMap<>();
+		private Map<String, Set<PluginDependency>> removeDependencies = new HashMap<>();
 		private PluginConfigurationFileReader pluginConfigurationFileReader;
 		private Set<PluginConfiguration> pluginConfiguration = new HashSet<>();
 		private Set<PluginsSearch> pluginsSearch = new HashSet<>();
@@ -103,6 +168,32 @@ public class PluginsLoaderMock extends PluginsLoaderImp {
 		private Builder() {
 		}
 
+		public Builder withDependency(String code, PluginDependency value) {
+			Set<PluginDependency> set = this.addDependencies.get(code);
+			
+			if(set == null) {
+				set = new HashSet<>();
+				this.addDependencies.put(code, set);
+			}
+			
+			set.add(value);
+			
+			return this;
+		}
+
+		public Builder withoutDependency(String code, PluginDependency value) {
+			Set<PluginDependency> set = this.removeDependencies.get(code);
+			
+			if(set == null) {
+				set = new HashSet<>();
+				this.removeDependencies.put(code, set);
+			}
+			
+			set.add(value);
+			
+			return this;
+		}
+		
 		public Builder withPluginConfigurationFileReader(PluginConfigurationFileReader pluginConfigurationFileReader) {
 			this.pluginConfigurationFileReader = pluginConfigurationFileReader;
 			return this;
