@@ -7,10 +7,11 @@ import java.util.Map;
 import br.com.uoutec.application.bean.Bean;
 import br.com.uoutec.application.bean.BeanPropertyAnnotation;
 import br.com.uoutec.ediacaran.core.BeanFactory;
+import br.com.uoutec.ediacaran.core.EdiacaranBootstrapException;
 
 public class MockBeanDiscover {
 	
-	public Map<Class<?>, Object> getMocks(Class<?> clazz, String pluginContext){
+	public Map<Class<?>, Object> getMocks(Class<?> clazz, String pluginContext) {
 		
 		Map<Class<?>, Object> map = new HashMap<Class<?>, Object>();
 		
@@ -32,8 +33,13 @@ public class MockBeanDiscover {
 					cache.put(context, c);
 				}
 				
-				BeanFactory factory = new MockBeanFactory(clazz, p.getName(), context, c);
-				map.put(p.getDeclaredType(), factory);
+				try {
+					BeanFactory factory = new MockBeanFactory(clazz, p.getName(), context, c);
+					map.put(p.getDeclaredType(), factory);
+				}
+				catch(Throwable ex) {
+					throw new EdiacaranBootstrapException(ex);
+				}
 			}
 			
 		}
